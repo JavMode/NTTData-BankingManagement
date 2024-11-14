@@ -1,0 +1,141 @@
+openapi: 3.0.0
+info:
+  title: Client Microservice
+  description: API to manage bank clients.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8090
+
+paths:
+
+  /clients:
+    get:
+      tags:
+        - client
+      summary: Get all clients
+      operationId: getClients
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+    post:
+      tags:
+        - client
+      summary: Create a new client
+      operationId: createClient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+      responses:
+        201:
+          description: Client created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        400:
+          description: Invalid input
+    put:
+      tags:
+        - client
+      summary: Update client by ID
+      operationId: updateClient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Client not found
+  /clients/{id}:
+    get:
+      tags:
+        - client
+      summary: Find client by ID
+      operationId: getClientById
+      parameters:
+        - in: path
+          name: id
+          description: ID of client to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Client not found
+    delete:
+      tags:
+        - client
+      summary: Delete a client by ID
+      operationId: deleteClientById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: No content
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Client not found
+
+components:
+  schemas:
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1
+        name:
+          type: string
+          example: Juan
+        accountType:
+          type: string
+          enum: [personal, empresarial]
+        dateCreation:
+          type: string
+          format: date-time
+    ClientInput:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Juan
+        accountType:
+          type: string
+          enum: [personal, empresarial]
+
+tags:
+  - name: client
+    description: Operations about client
